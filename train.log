@@ -1,0 +1,405 @@
+network: 128-256-128-64  out: D:\ChatGPT\DQN_Othello\output
+ep 100  0.1min  eps=0.597  loss=0.0109  steps=250  buf=5999
+ep 200  0.5min  eps=0.595  loss=0.0077  steps=1750  buf=11999
+ep 300  1.0min  eps=0.592  loss=0.0059  steps=3250  buf=17999
+ep 400  1.4min  eps=0.589  loss=0.0048  steps=4750  buf=23996
+ep 500  1.9min  eps=0.586  loss=0.0044  steps=6249  buf=29994
+ep 600  2.3min  eps=0.584  loss=0.0048  steps=7749  buf=35994
+ep 700  2.7min  eps=0.581  loss=0.0057  steps=9249  buf=41994
+ep 800  3.2min  eps=0.578  loss=0.0048  steps=10749  buf=47993
+ep 900  3.6min  eps=0.575  loss=0.0053  steps=12249  buf=53993
+ep 1000  4.0min  eps=0.573  loss=0.0054  steps=13749  buf=59993
+  [eval] vs ランダム 75.5% (勝72/分7/負21)  vs 貪欲 73.5% (勝73/分1/負26)
+  -> best 更新
+ep 1100  4.5min  eps=0.570  loss=0.0062  steps=15249  buf=65993
+ep 1200  4.9min  eps=0.567  loss=0.0065  steps=16748  buf=71990
+ep 1300  5.4min  eps=0.564  loss=0.0065  steps=18248  buf=77990
+ep 1400  5.8min  eps=0.562  loss=0.0068  steps=19748  buf=83988
+ep 1500  6.3min  eps=0.559  loss=0.0068  steps=21247  buf=89984
+ep 1600  6.7min  eps=0.556  loss=0.0065  steps=22746  buf=95983
+ep 1700  7.1min  eps=0.553  loss=0.0071  steps=24246  buf=101983
+ep 1800  7.6min  eps=0.551  loss=0.0083  steps=25746  buf=107981
+ep 1900  8.0min  eps=0.548  loss=0.0076  steps=27246  buf=113981
+ep 2000  8.5min  eps=0.545  loss=0.0069  steps=28746  buf=119981
+  [eval] vs ランダム 89.0% (勝89/分0/負11)  vs 貪欲 85.0% (勝85/分0/負15)
+  -> best 更新
+ep 2100  8.9min  eps=0.542  loss=0.0073  steps=30245  buf=125979
+finished: episode=2122 trainSteps=30564 elapsed=9.0min
+resume: episode=2122 trainSteps=30564 elapsed=9.0min
+network: 128-256-128-64  out: D:\ChatGPT\DQN_Othello\output
+ep 2200  9.0min  eps=0.540  loss=-  steps=30564  buf=4678
+ep 2300  9.4min  eps=0.537  loss=0.0060  steps=31984  buf=10676
+ep 2400  9.8min  eps=0.534  loss=0.0078  steps=33483  buf=16673
+ep 2500  10.3min  eps=0.531  loss=0.0073  steps=34983  buf=22673
+ep 2600  10.7min  eps=0.529  loss=0.0076  steps=36483  buf=28672
+ep 2700  11.1min  eps=0.526  loss=0.0081  steps=37970  buf=34623
+ep 2800  11.6min  eps=0.523  loss=0.0090  steps=39469  buf=40619
+ep 2900  12.0min  eps=0.520  loss=0.0082  steps=40969  buf=46616
+ep 3000  12.5min  eps=0.518  loss=0.0080  steps=42469  buf=52616
+  [eval] vs ランダム 88.5% (勝88/分1/負11)  vs 貪欲 85.5% (勝83/分5/負12)
+ep 3100  12.8min  eps=0.515  loss=0.0087  steps=43965  buf=58603
+ep 3200  13.1min  eps=0.512  loss=0.0092  steps=45465  buf=64602
+ep 3300  13.4min  eps=0.509  loss=0.0086  steps=46965  buf=70600
+ep 3400  13.7min  eps=0.507  loss=0.0099  steps=48464  buf=76599
+ep 3500  14.0min  eps=0.504  loss=0.0090  steps=49964  buf=82599
+ep 3600  14.3min  eps=0.501  loss=0.0089  steps=51464  buf=88598
+ep 3700  14.5min  eps=0.498  loss=0.0088  steps=52963  buf=94594
+ep 3800  14.8min  eps=0.496  loss=0.0087  steps=54463  buf=100593
+ep 3900  15.1min  eps=0.493  loss=0.0093  steps=55962  buf=106588
+ep 4000  15.4min  eps=0.490  loss=0.0088  steps=57461  buf=112587
+  [eval] vs ランダム 91.0% (勝91/分0/負9)  vs 貪欲 92.0% (勝91/分2/負7)
+  -> best 更新
+ep 4100  15.7min  eps=0.487  loss=0.0089  steps=58961  buf=118586
+ep 4200  16.0min  eps=0.485  loss=0.0093  steps=60461  buf=124584
+ep 4300  16.3min  eps=0.482  loss=0.0092  steps=61960  buf=130582
+ep 4400  16.6min  eps=0.479  loss=0.0096  steps=63460  buf=136580
+ep 4500  16.9min  eps=0.476  loss=0.0094  steps=64959  buf=142578
+ep 4600  17.3min  eps=0.474  loss=0.0086  steps=66459  buf=148577
+ep 4700  17.6min  eps=0.471  loss=0.0089  steps=67959  buf=154576
+ep 4800  17.9min  eps=0.468  loss=0.0094  steps=69458  buf=160574
+finished: episode=4820 trainSteps=69758 elapsed=18.0min
+resume: episode=4820 trainSteps=69758 elapsed=18.0min
+network: 128-256-128-64  out: D:\ChatGPT\DQN_Othello\output
+ep 4900  18.0min  eps=0.465  loss=-  steps=69758  buf=4797
+ep 5000  18.3min  eps=0.463  loss=0.0091  steps=71207  buf=10792
+  [eval] vs ランダム 90.5% (勝90/分1/負9)  vs 貪欲 87.0% (勝87/分0/負13)
+ep 5100  18.6min  eps=0.460  loss=0.0084  steps=72706  buf=16788
+ep 5200  18.9min  eps=0.457  loss=0.0078  steps=74206  buf=22788
+ep 5300  19.2min  eps=0.454  loss=0.0079  steps=75693  buf=28737
+ep 5400  19.5min  eps=0.452  loss=0.0084  steps=77193  buf=34737
+ep 5500  19.8min  eps=0.449  loss=0.0090  steps=78693  buf=40736
+ep 5600  20.1min  eps=0.446  loss=0.0093  steps=80192  buf=46734
+ep 5700  20.3min  eps=0.443  loss=0.0084  steps=81692  buf=52732
+ep 5800  20.6min  eps=0.441  loss=0.0083  steps=83181  buf=58689
+ep 5900  20.9min  eps=0.438  loss=0.0084  steps=84681  buf=64689
+ep 6000  21.2min  eps=0.435  loss=0.0081  steps=86180  buf=70686
+  [eval] vs ランダム 90.0% (勝90/分0/負10)  vs 貪欲 91.5% (勝90/分3/負7)
+ep 6100  21.4min  eps=0.432  loss=0.0074  steps=87680  buf=76685
+ep 6200  21.7min  eps=0.430  loss=0.0083  steps=89180  buf=82685
+ep 6300  22.0min  eps=0.427  loss=0.0078  steps=90680  buf=88685
+ep 6400  22.3min  eps=0.424  loss=0.0085  steps=92179  buf=94681
+ep 6500  22.6min  eps=0.421  loss=0.0080  steps=93679  buf=100681
+ep 6600  22.8min  eps=0.419  loss=0.0080  steps=95179  buf=106680
+ep 6700  23.1min  eps=0.416  loss=0.0075  steps=96678  buf=112679
+ep 6800  23.4min  eps=0.413  loss=0.0086  steps=98178  buf=118677
+ep 6900  23.6min  eps=0.410  loss=0.0077  steps=99677  buf=124674
+ep 7000  23.9min  eps=0.408  loss=0.0081  steps=101175  buf=130666
+  [eval] vs ランダム 89.5% (勝89/分1/負10)  vs 貪欲 89.0% (勝88/分2/負10)
+ep 7100  24.2min  eps=0.405  loss=0.0084  steps=102674  buf=136662
+ep 7200  24.5min  eps=0.402  loss=0.0082  steps=104173  buf=142657
+ep 7300  24.8min  eps=0.399  loss=0.0085  steps=105673  buf=148657
+ep 7400  25.1min  eps=0.397  loss=0.0084  steps=107172  buf=154655
+ep 7500  25.6min  eps=0.394  loss=0.0081  steps=108672  buf=160654
+ep 7600  26.2min  eps=0.391  loss=0.0078  steps=110172  buf=166653
+ep 7700  26.8min  eps=0.388  loss=0.0075  steps=111672  buf=172653
+finished: episode=7739 trainSteps=112257 elapsed=27.0min
+resume: episode=7739 trainSteps=112257 elapsed=27.0min
+network: 128-256-128-64  out: D:\ChatGPT\DQN_Othello\output
+ep 7800  27.0min  eps=0.386  loss=-  steps=112257  buf=3658
+ep 7900  27.5min  eps=0.383  loss=0.0078  steps=113421  buf=9653
+ep 8000  27.8min  eps=0.380  loss=0.0083  steps=114920  buf=15651
+  [eval] vs ランダム 96.5% (勝96/分1/負3)  vs 貪欲 87.5% (勝87/分1/負12)
+  -> best 更新
+ep 8100  28.2min  eps=0.377  loss=0.0075  steps=116420  buf=21649
+ep 8200  28.5min  eps=0.375  loss=0.0074  steps=117919  buf=27645
+ep 8300  28.8min  eps=0.372  loss=0.0079  steps=119418  buf=33643
+ep 8400  29.1min  eps=0.369  loss=0.0074  steps=120918  buf=39641
+ep 8500  29.4min  eps=0.366  loss=0.0073  steps=122417  buf=45637
+ep 8600  29.7min  eps=0.364  loss=0.0076  steps=123917  buf=51637
+ep 8700  29.9min  eps=0.361  loss=0.0075  steps=125395  buf=57549
+ep 8800  30.2min  eps=0.358  loss=0.0075  steps=126895  buf=63548
+ep 8900  30.4min  eps=0.355  loss=0.0071  steps=128386  buf=69514
+ep 9000  30.7min  eps=0.353  loss=0.0074  steps=129886  buf=75514
+  [eval] vs ランダム 96.0% (勝95/分2/負3)  vs 貪欲 90.5% (勝88/分5/負7)
+  -> best 更新
+ep 9100  31.0min  eps=0.350  loss=0.0076  steps=131386  buf=81513
+ep 9200  31.2min  eps=0.347  loss=0.0075  steps=132886  buf=87513
+ep 9300  31.5min  eps=0.344  loss=0.0077  steps=134385  buf=93511
+ep 9400  31.7min  eps=0.342  loss=0.0076  steps=135885  buf=99508
+ep 9500  32.0min  eps=0.339  loss=0.0076  steps=137384  buf=105504
+ep 9600  32.3min  eps=0.336  loss=0.0072  steps=138883  buf=111500
+ep 9700  32.6min  eps=0.333  loss=0.0074  steps=140383  buf=117500
+ep 9800  32.8min  eps=0.331  loss=0.0074  steps=141882  buf=123498
+ep 9900  33.1min  eps=0.328  loss=0.0079  steps=143382  buf=129497
+ep 10000  33.5min  eps=0.325  loss=0.0074  steps=144881  buf=135495
+  [eval] vs ランダム 95.0% (勝94/分2/負4)  vs 貪欲 92.5% (勝92/分1/負7)
+  -> best 更新
+ep 10100  33.9min  eps=0.322  loss=0.0078  steps=146381  buf=141493
+ep 10200  34.2min  eps=0.320  loss=0.0081  steps=147881  buf=147492
+ep 10300  34.4min  eps=0.317  loss=0.0079  steps=149381  buf=153492
+ep 10400  34.7min  eps=0.314  loss=0.0076  steps=150881  buf=159492
+ep 10500  35.0min  eps=0.311  loss=0.0074  steps=152380  buf=165491
+ep 10600  35.2min  eps=0.309  loss=0.0080  steps=153880  buf=171489
+ep 10700  35.5min  eps=0.306  loss=0.0083  steps=155379  buf=177487
+ep 10800  35.8min  eps=0.303  loss=0.0081  steps=156879  buf=183485
+finished: episode=10886 trainSteps=158169 elapsed=36.0min
+resume: episode=10886 trainSteps=158169 elapsed=36.0min
+network: 128-256-128-64  out: D:\ChatGPT\DQN_Othello\output
+ep 10900  36.0min  eps=0.300  loss=-  steps=158169  buf=838
+ep 11000  36.1min  eps=0.298  loss=0.0084  steps=158628  buf=6834
+  [eval] vs ランダム 100.0% (勝100/分0/負0)  vs 貪欲 86.0% (勝86/分0/負14)
+ep 11100  36.4min  eps=0.295  loss=0.0073  steps=160127  buf=12831
+ep 11200  36.6min  eps=0.292  loss=0.0067  steps=161627  buf=18829
+ep 11300  36.9min  eps=0.289  loss=0.0072  steps=163126  buf=24825
+ep 11400  37.2min  eps=0.287  loss=0.0071  steps=164625  buf=30823
+ep 11500  37.5min  eps=0.284  loss=0.0072  steps=166125  buf=36821
+ep 11600  37.7min  eps=0.281  loss=0.0074  steps=167624  buf=42816
+ep 11700  38.0min  eps=0.278  loss=0.0078  steps=169122  buf=48808
+ep 11800  38.3min  eps=0.276  loss=0.0077  steps=170622  buf=54808
+ep 11900  38.5min  eps=0.273  loss=0.0080  steps=172121  buf=60807
+ep 12000  38.8min  eps=0.270  loss=0.0080  steps=173620  buf=66803
+  [eval] vs ランダム 94.5% (勝94/分1/負5)  vs 貪欲 95.5% (勝95/分1/負4)
+  -> best 更新
+ep 12100  39.1min  eps=0.267  loss=0.0079  steps=175119  buf=72798
+ep 12200  39.3min  eps=0.265  loss=0.0076  steps=176618  buf=78795
+ep 12300  39.6min  eps=0.262  loss=0.0078  steps=178118  buf=84795
+ep 12400  39.9min  eps=0.259  loss=0.0076  steps=179617  buf=90788
+ep 12500  40.1min  eps=0.256  loss=0.0082  steps=181116  buf=96786
+ep 12600  40.4min  eps=0.254  loss=0.0085  steps=182615  buf=102781
+ep 12700  40.6min  eps=0.251  loss=0.0085  steps=184114  buf=108779
+ep 12800  40.9min  eps=0.248  loss=0.0087  steps=185614  buf=114779
+ep 12900  41.1min  eps=0.245  loss=0.0084  steps=187114  buf=120778
+ep 13000  41.4min  eps=0.243  loss=0.0084  steps=188614  buf=126776
+  [eval] vs ランダム 97.0% (勝96/分2/負2)  vs 貪欲 84.5% (勝84/分1/負15)
+ep 13100  41.7min  eps=0.240  loss=0.0077  steps=190113  buf=132773
+ep 13200  41.9min  eps=0.237  loss=0.0077  steps=191612  buf=138771
+ep 13300  42.2min  eps=0.234  loss=0.0074  steps=193112  buf=144769
+ep 13400  42.4min  eps=0.232  loss=0.0086  steps=194611  buf=150767
+ep 13500  42.7min  eps=0.229  loss=0.0078  steps=196111  buf=156764
+ep 13600  43.0min  eps=0.226  loss=0.0081  steps=197610  buf=162760
+ep 13700  43.2min  eps=0.223  loss=0.0084  steps=199109  buf=168757
+ep 13800  43.5min  eps=0.221  loss=0.0085  steps=200608  buf=174753
+ep 13900  43.8min  eps=0.218  loss=0.0083  steps=202107  buf=180751
+ep 14000  44.0min  eps=0.215  loss=0.0080  steps=203606  buf=186747
+  [eval] vs ランダム 98.0% (勝98/分0/負2)  vs 貪欲 94.5% (勝94/分1/負5)
+  -> best 更新
+ep 14100  44.3min  eps=0.212  loss=0.0077  steps=205105  buf=192740
+ep 14200  44.6min  eps=0.210  loss=0.0078  steps=206603  buf=198735
+ep 14300  44.8min  eps=0.207  loss=0.0082  steps=208103  buf=200000
+finished: episode=14372 trainSteps=209181 elapsed=45.0min
+resume: episode=14372 trainSteps=209181 elapsed=45.0min
+network: 128-256-128-64  out: D:\ChatGPT\DQN_Othello\output
+ep 14400  45.0min  eps=0.204  loss=-  steps=209181  buf=1680
+ep 14500  45.1min  eps=0.201  loss=0.0075  steps=209852  buf=7680
+ep 14600  45.4min  eps=0.199  loss=0.0076  steps=211331  buf=13597
+ep 14700  45.6min  eps=0.196  loss=0.0074  steps=212830  buf=19593
+ep 14800  45.9min  eps=0.193  loss=0.0075  steps=214328  buf=25586
+ep 14900  46.1min  eps=0.190  loss=0.0080  steps=215827  buf=31580
+ep 15000  46.4min  eps=0.188  loss=0.0082  steps=217326  buf=37578
+  [eval] vs ランダム 94.5% (勝94/分1/負5)  vs 貪欲 90.0% (勝89/分2/負9)
+ep 15100  46.6min  eps=0.185  loss=0.0082  steps=218825  buf=43574
+ep 15200  46.9min  eps=0.182  loss=0.0077  steps=220324  buf=49569
+ep 15300  47.1min  eps=0.179  loss=0.0077  steps=221823  buf=55564
+ep 15400  47.4min  eps=0.177  loss=0.0079  steps=223322  buf=61561
+ep 15500  47.6min  eps=0.174  loss=0.0075  steps=224820  buf=67555
+ep 15600  47.9min  eps=0.171  loss=0.0083  steps=226319  buf=73549
+ep 15700  48.1min  eps=0.168  loss=0.0071  steps=227818  buf=79546
+ep 15800  48.4min  eps=0.166  loss=0.0079  steps=229306  buf=85499
+ep 15900  48.7min  eps=0.163  loss=0.0073  steps=230793  buf=91444
+ep 16000  48.9min  eps=0.160  loss=0.0075  steps=232292  buf=97440
+  [eval] vs ランダム 94.0% (勝93/分2/負5)  vs 貪欲 77.0% (勝76/分2/負22)
+ep 16100  49.2min  eps=0.157  loss=0.0072  steps=233791  buf=103438
+ep 16200  49.5min  eps=0.155  loss=0.0073  steps=235267  buf=109340
+ep 16300  49.7min  eps=0.152  loss=0.0078  steps=236765  buf=115332
+ep 16400  50.0min  eps=0.149  loss=0.0079  steps=238264  buf=121328
+ep 16500  50.3min  eps=0.146  loss=0.0075  steps=239763  buf=127324
+ep 16600  50.5min  eps=0.144  loss=0.0076  steps=241262  buf=133323
+ep 16700  50.8min  eps=0.141  loss=0.0076  steps=242761  buf=139319
+ep 16800  51.0min  eps=0.138  loss=0.0073  steps=244260  buf=145314
+ep 16900  51.3min  eps=0.135  loss=0.0074  steps=245760  buf=151312
+ep 17000  51.5min  eps=0.133  loss=0.0072  steps=247259  buf=157308
+  [eval] vs ランダム 96.0% (勝96/分0/負4)  vs 貪欲 89.5% (勝89/分1/負10)
+ep 17100  51.8min  eps=0.130  loss=0.0074  steps=248757  buf=163301
+ep 17200  52.1min  eps=0.127  loss=0.0073  steps=250249  buf=169268
+ep 17300  52.3min  eps=0.124  loss=0.0070  steps=251747  buf=175262
+ep 17400  52.6min  eps=0.122  loss=0.0080  steps=253246  buf=181256
+ep 17500  52.8min  eps=0.119  loss=0.0078  steps=254745  buf=187254
+ep 17600  53.1min  eps=0.116  loss=0.0079  steps=256244  buf=193248
+ep 17700  53.4min  eps=0.113  loss=0.0079  steps=257741  buf=199239
+ep 17800  53.7min  eps=0.111  loss=0.0081  steps=259241  buf=200000
+ep 17900  54.0min  eps=0.108  loss=0.0076  steps=260740  buf=200000
+finished: episode=17910 trainSteps=260890 elapsed=54.0min
+resume: episode=17910 trainSteps=260890 elapsed=54.0min
+network: 128-256-128-64  out: D:\ChatGPT\DQN_Othello\output
+ep 18000  54.0min  eps=0.105  loss=0.0073  steps=260989  buf=5392
+  [eval] vs ランダム 94.5% (勝94/分1/負5)  vs 貪欲 73.5% (勝73/分1/負26)
+ep 18100  54.3min  eps=0.102  loss=0.0066  steps=262488  buf=11389
+ep 18200  54.6min  eps=0.100  loss=0.0068  steps=263986  buf=17383
+ep 18300  54.9min  eps=0.097  loss=0.0072  steps=265486  buf=23380
+ep 18400  55.5min  eps=0.094  loss=0.0081  steps=266984  buf=29374
+ep 18500  56.0min  eps=0.091  loss=0.0076  steps=268483  buf=35371
+ep 18600  56.6min  eps=0.089  loss=0.0072  steps=269982  buf=41366
+ep 18700  57.1min  eps=0.086  loss=0.0075  steps=271481  buf=47363
+ep 18800  57.6min  eps=0.083  loss=0.0074  steps=272980  buf=53358
+ep 18900  58.1min  eps=0.080  loss=0.0079  steps=274470  buf=59317
+ep 19000  58.6min  eps=0.078  loss=0.0077  steps=275969  buf=65315
+  [eval] vs ランダム 93.5% (勝93/分1/負6)  vs 貪欲 87.0% (勝86/分2/負12)
+ep 19100  59.1min  eps=0.075  loss=0.0079  steps=277467  buf=71304
+ep 19200  59.6min  eps=0.072  loss=0.0079  steps=278965  buf=77298
+ep 19300  60.0min  eps=0.069  loss=0.0079  steps=280464  buf=83293
+ep 19400  60.6min  eps=0.067  loss=0.0082  steps=281963  buf=89288
+ep 19500  61.1min  eps=0.064  loss=0.0077  steps=283455  buf=95259
+ep 19600  61.6min  eps=0.061  loss=0.0074  steps=284952  buf=101246
+ep 19700  62.1min  eps=0.058  loss=0.0075  steps=286450  buf=107238
+ep 19800  62.5min  eps=0.056  loss=0.0082  steps=287949  buf=113233
+finished: episode=19897 trainSteps=289403 elapsed=63.0min
+resume: episode=19897 trainSteps=289403 elapsed=63.0min
+network: 128-256-128-64  out: D:\ChatGPT\DQN_Othello\output
+ep 19900  63.0min  eps=0.053  loss=-  steps=289403  buf=179
+ep 20000  63.1min  eps=0.050  loss=0.0066  steps=289697  buf=6174
+  [eval] vs ランダム 96.0% (勝96/分0/負4)  vs 貪欲 94.0% (勝94/分0/負6)
+ep 20100  63.6min  eps=0.050  loss=0.0063  steps=291174  buf=12082
+ep 20200  64.0min  eps=0.050  loss=0.0069  steps=292674  buf=18080
+ep 20300  64.5min  eps=0.050  loss=0.0077  steps=294171  buf=24069
+ep 20400  65.0min  eps=0.050  loss=0.0074  steps=295670  buf=30066
+ep 20500  65.4min  eps=0.050  loss=0.0074  steps=297169  buf=36061
+ep 20600  65.9min  eps=0.050  loss=0.0078  steps=298655  buf=42006
+ep 20700  66.4min  eps=0.050  loss=0.0075  steps=300155  buf=48005
+ep 20800  66.9min  eps=0.050  loss=0.0076  steps=301654  buf=54000
+ep 20900  67.4min  eps=0.050  loss=0.0079  steps=303143  buf=59957
+ep 21000  67.8min  eps=0.050  loss=0.0082  steps=304642  buf=65953
+  [eval] vs ランダム 94.0% (勝93/分2/負5)  vs 貪欲 91.0% (勝90/分2/負8)
+ep 21100  68.3min  eps=0.050  loss=0.0079  steps=306141  buf=71949
+ep 21200  68.8min  eps=0.050  loss=0.0077  steps=307640  buf=77945
+ep 21300  69.3min  eps=0.050  loss=0.0078  steps=309139  buf=83942
+ep 21400  69.7min  eps=0.050  loss=0.0077  steps=310637  buf=89934
+ep 21500  70.2min  eps=0.050  loss=0.0079  steps=312136  buf=95931
+ep 21600  70.7min  eps=0.050  loss=0.0075  steps=313635  buf=101925
+ep 21700  71.2min  eps=0.050  loss=0.0079  steps=315134  buf=107922
+ep 21800  71.6min  eps=0.050  loss=0.0081  steps=316625  buf=113886
+finished: episode=21880 trainSteps=317814 elapsed=72.0min
+resume: episode=21880 trainSteps=317814 elapsed=72.0min
+network: 128-256-128-64  out: D:\ChatGPT\DQN_Othello\output
+ep 21900  72.0min  eps=0.050  loss=-  steps=317814  buf=1199
+ep 22000  72.2min  eps=0.050  loss=0.0096  steps=318352  buf=7148
+  [eval] vs ランダム 97.5% (勝97/分1/負2)  vs 貪欲 97.5% (勝97/分1/負2)
+  -> best 更新
+ep 22100  72.7min  eps=0.050  loss=0.0079  steps=319850  buf=13140
+ep 22200  73.1min  eps=0.050  loss=0.0077  steps=321349  buf=19136
+ep 22300  73.6min  eps=0.050  loss=0.0081  steps=322847  buf=25131
+ep 22400  74.0min  eps=0.050  loss=0.0080  steps=324347  buf=31128
+ep 22500  74.5min  eps=0.050  loss=0.0081  steps=325845  buf=37123
+ep 22600  75.0min  eps=0.050  loss=0.0081  steps=327336  buf=43084
+ep 22700  75.4min  eps=0.050  loss=0.0080  steps=328835  buf=49083
+ep 22800  75.9min  eps=0.050  loss=0.0085  steps=330335  buf=55080
+ep 22900  76.3min  eps=0.050  loss=0.0082  steps=331833  buf=61074
+ep 23000  76.8min  eps=0.050  loss=0.0088  steps=333332  buf=67071
+  [eval] vs ランダム 97.0% (勝97/分0/負3)  vs 貪欲 89.5% (勝89/分1/負10)
+ep 23100  77.3min  eps=0.050  loss=0.0083  steps=334831  buf=73064
+ep 23200  77.7min  eps=0.050  loss=0.0084  steps=336330  buf=79061
+ep 23300  78.2min  eps=0.050  loss=0.0081  steps=337829  buf=85057
+ep 23400  78.7min  eps=0.050  loss=0.0084  steps=339328  buf=91052
+ep 23500  79.1min  eps=0.050  loss=0.0082  steps=340807  buf=96969
+ep 23600  79.6min  eps=0.050  loss=0.0082  steps=342306  buf=102967
+ep 23700  80.1min  eps=0.050  loss=0.0082  steps=343805  buf=108963
+ep 23800  80.5min  eps=0.050  loss=0.0085  steps=345302  buf=114951
+ep 23900  81.0min  eps=0.050  loss=0.0084  steps=346801  buf=120946
+finished: episode=23902 trainSteps=346831 elapsed=81.0min
+resume: episode=23902 trainSteps=346831 elapsed=81.0min
+network: 128-256-128-64  out: D:\ChatGPT\DQN_Othello\output
+ep 24000  81.1min  eps=0.050  loss=0.0094  steps=347050  buf=5875
+  [eval] vs ランダム 94.0% (勝94/分0/負6)  vs 貪欲 95.0% (勝95/分0/負5)
+ep 24100  81.5min  eps=0.050  loss=0.0081  steps=348538  buf=11827
+ep 24200  82.0min  eps=0.050  loss=0.0085  steps=350035  buf=17814
+ep 24300  82.5min  eps=0.050  loss=0.0081  steps=351533  buf=23804
+ep 24400  82.9min  eps=0.050  loss=0.0082  steps=353029  buf=29789
+ep 24500  83.4min  eps=0.050  loss=0.0081  steps=354527  buf=35780
+ep 24600  83.9min  eps=0.050  loss=0.0081  steps=356025  buf=41772
+ep 24700  84.3min  eps=0.050  loss=0.0082  steps=357524  buf=47770
+ep 24800  84.8min  eps=0.050  loss=0.0082  steps=359011  buf=53716
+ep 24900  85.2min  eps=0.050  loss=0.0083  steps=360509  buf=59709
+ep 25000  85.7min  eps=0.050  loss=0.0082  steps=362007  buf=65703
+  [eval] vs ランダム 93.5% (勝93/分1/負6)  vs 貪欲 97.0% (勝97/分0/負3)
+ep 25100  86.2min  eps=0.050  loss=0.0079  steps=363506  buf=71699
+ep 25200  86.6min  eps=0.050  loss=0.0081  steps=365006  buf=77697
+ep 25300  87.1min  eps=0.050  loss=0.0078  steps=366506  buf=83696
+ep 25400  87.5min  eps=0.050  loss=0.0079  steps=368005  buf=89692
+ep 25500  88.0min  eps=0.050  loss=0.0082  steps=369496  buf=95657
+ep 25600  88.4min  eps=0.050  loss=0.0081  steps=370996  buf=101656
+ep 25700  88.9min  eps=0.050  loss=0.0082  steps=372476  buf=107576
+ep 25800  89.4min  eps=0.050  loss=0.0084  steps=373974  buf=113570
+ep 25900  89.8min  eps=0.050  loss=0.0080  steps=375473  buf=119565
+finished: episode=25942 trainSteps=376102 elapsed=90.0min
+resume: episode=25942 trainSteps=376102 elapsed=90.0min
+network: 128-256-128-64  out: D:\ChatGPT\DQN_Othello\output
+ep 26000  90.0min  eps=0.050  loss=-  steps=376102  buf=3478
+  [eval] vs ランダム 96.0% (勝96/分0/負4)  vs 貪欲 93.0% (勝93/分0/負7)
+ep 26100  90.4min  eps=0.050  loss=0.0083  steps=377220  buf=9471
+ep 26200  90.8min  eps=0.050  loss=0.0080  steps=378718  buf=15462
+ep 26300  91.3min  eps=0.050  loss=0.0082  steps=380216  buf=21454
+ep 26400  91.7min  eps=0.050  loss=0.0084  steps=381715  buf=27448
+ep 26500  92.2min  eps=0.050  loss=0.0080  steps=383214  buf=33446
+ep 26600  92.7min  eps=0.050  loss=0.0085  steps=384713  buf=39442
+ep 26700  93.1min  eps=0.050  loss=0.0087  steps=386212  buf=45436
+ep 26800  93.6min  eps=0.050  loss=0.0086  steps=387708  buf=51421
+ep 26900  94.1min  eps=0.050  loss=0.0088  steps=389206  buf=57412
+ep 27000  94.6min  eps=0.050  loss=0.0086  steps=390704  buf=63405
+  [eval] vs ランダム 93.0% (勝92/分2/負6)  vs 貪欲 90.0% (勝90/分0/負10)
+ep 27100  95.0min  eps=0.050  loss=0.0087  steps=392196  buf=69372
+ep 27200  95.5min  eps=0.050  loss=0.0089  steps=393694  buf=75367
+ep 27300  96.0min  eps=0.050  loss=0.0092  steps=395187  buf=81339
+ep 27400  96.4min  eps=0.050  loss=0.0088  steps=396685  buf=87331
+ep 27500  96.9min  eps=0.050  loss=0.0087  steps=398174  buf=93286
+ep 27600  97.3min  eps=0.050  loss=0.0089  steps=399673  buf=99283
+ep 27700  97.8min  eps=0.050  loss=0.0083  steps=401172  buf=105276
+ep 27800  98.4min  eps=0.050  loss=0.0083  steps=402660  buf=111230
+ep 27900  98.9min  eps=0.050  loss=0.0086  steps=404150  buf=117189
+finished: episode=27925 trainSteps=404525 elapsed=99.0min
+resume: episode=27925 trainSteps=404525 elapsed=99.0min
+network: 128-256-128-64  out: D:\ChatGPT\DQN_Othello\output
+ep 28000  99.0min  eps=0.050  loss=-  steps=404525  buf=4492
+  [eval] vs ランダム 96.5% (勝96/分1/負3)  vs 貪欲 91.5% (勝91/分1/負8)
+ep 28100  99.4min  eps=0.050  loss=0.0084  steps=405897  buf=10487
+ep 28200  99.9min  eps=0.050  loss=0.0079  steps=407396  buf=16481
+ep 28300  100.4min  eps=0.050  loss=0.0085  steps=408895  buf=22479
+ep 28400  100.9min  eps=0.050  loss=0.0088  steps=410392  buf=28466
+ep 28500  101.4min  eps=0.050  loss=0.0088  steps=411879  buf=34414
+ep 28600  101.9min  eps=0.050  loss=0.0086  steps=413378  buf=40408
+ep 28700  102.3min  eps=0.050  loss=0.0087  steps=414877  buf=46407
+ep 28800  102.8min  eps=0.050  loss=0.0089  steps=416377  buf=52406
+ep 28900  103.2min  eps=0.050  loss=0.0087  steps=417877  buf=58404
+ep 29000  103.7min  eps=0.050  loss=0.0089  steps=419342  buf=64266
+  [eval] vs ランダム 97.5% (勝97/分1/負2)  vs 貪欲 93.5% (勝93/分1/負6)
+ep 29100  104.2min  eps=0.050  loss=0.0086  steps=420839  buf=70254
+ep 29200  104.7min  eps=0.050  loss=0.0084  steps=422339  buf=76253
+ep 29300  105.2min  eps=0.050  loss=0.0085  steps=423838  buf=82250
+ep 29400  105.6min  eps=0.050  loss=0.0084  steps=425330  buf=88217
+ep 29500  106.1min  eps=0.050  loss=0.0089  steps=426829  buf=94213
+ep 29600  106.6min  eps=0.050  loss=0.0087  steps=428329  buf=100213
+ep 29700  107.1min  eps=0.050  loss=0.0084  steps=429827  buf=106206
+ep 29800  107.5min  eps=0.050  loss=0.0084  steps=431325  buf=112199
+ep 29900  108.0min  eps=0.050  loss=0.0084  steps=432824  buf=118192
+finished: episode=29904 trainSteps=432884 elapsed=108.0min
+resume: episode=29904 trainSteps=432884 elapsed=108.0min
+network: 128-256-128-64  out: D:\ChatGPT\DQN_Othello\output
+ep 30000  108.1min  eps=0.050  loss=0.0094  steps=433074  buf=5756
+  [eval] vs ランダム 93.0% (勝93/分0/負7)  vs 貪欲 95.0% (勝95/分0/負5)
+ep 30100  108.6min  eps=0.050  loss=0.0093  steps=434562  buf=11708
+ep 30200  109.0min  eps=0.050  loss=0.0085  steps=436061  buf=17706
+ep 30300  109.5min  eps=0.050  loss=0.0095  steps=437560  buf=23702
+ep 30400  110.0min  eps=0.050  loss=0.0085  steps=439059  buf=29696
+ep 30500  110.4min  eps=0.050  loss=0.0084  steps=440558  buf=35693
+ep 30600  110.9min  eps=0.050  loss=0.0086  steps=442058  buf=41692
+ep 30700  111.4min  eps=0.050  loss=0.0082  steps=443557  buf=47690
+ep 30800  111.8min  eps=0.050  loss=0.0088  steps=445057  buf=53688
+ep 30900  112.3min  eps=0.050  loss=0.0087  steps=446556  buf=59685
+ep 31000  112.7min  eps=0.050  loss=0.0087  steps=448055  buf=65682
+  [eval] vs ランダム 89.0% (勝88/分2/負10)  vs 貪欲 91.0% (勝91/分0/負9)
+ep 31100  113.2min  eps=0.050  loss=0.0084  steps=449554  buf=71678
+ep 31200  113.7min  eps=0.050  loss=0.0084  steps=451053  buf=77672
+ep 31300  114.1min  eps=0.050  loss=0.0088  steps=452552  buf=83668
+ep 31400  114.6min  eps=0.050  loss=0.0086  steps=454033  buf=89593
+ep 31500  115.1min  eps=0.050  loss=0.0086  steps=455531  buf=95585
+ep 31600  115.6min  eps=0.050  loss=0.0084  steps=457030  buf=101583
+ep 31700  116.1min  eps=0.050  loss=0.0083  steps=458529  buf=107577
+ep 31800  116.5min  eps=0.050  loss=0.0087  steps=460028  buf=113574
+ep 31900  116.9min  eps=0.050  loss=0.0084  steps=461520  buf=119541
+ep 32000  117.4min  eps=0.050  loss=0.0084  steps=463019  buf=125536
+  [eval] vs ランダム 96.0% (勝96/分0/負4)  vs 貪欲 93.0% (勝93/分0/負7)
+ep 32100  117.8min  eps=0.050  loss=0.0084  steps=464518  buf=131533
+ep 32200  118.2min  eps=0.050  loss=0.0083  steps=466016  buf=137526
+ep 32300  118.6min  eps=0.050  loss=0.0084  steps=467514  buf=143518
+ep 32400  119.1min  eps=0.050  loss=0.0085  steps=469014  buf=149517
+ep 32500  119.5min  eps=0.050  loss=0.0084  steps=470513  buf=155513
+ep 32600  119.9min  eps=0.050  loss=0.0086  steps=472001  buf=161464
+finished: episode=32615 trainSteps=472225 elapsed=120.0min
