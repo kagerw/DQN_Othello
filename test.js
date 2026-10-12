@@ -169,5 +169,11 @@ console.log('gradient OK');
   const s0 = Game.newGame(net);
   const s1 = Game.step(s0, null, net, 3);
   assert.ok(s1.move !== null && s1.value !== null);
+  // 検討用: analyze は step と同じ手・同じ評価値を返し、終局局面では null
+  const an = Game.analyze(s0, net, 3);
+  assert.strictEqual(an.move, s1.move);
+  assert.ok(Math.abs(an.value - s1.value) < 1e-9);
+  const bd = new Array(64).fill(1);
+  assert.strictEqual(Game.analyze({ board: bd, player: 1 }, net, 3), null);
   console.log('Search OK (' + checked + ' positions, depth 1-4)');
 }

@@ -12,6 +12,7 @@
   h1 { font-size: 20px; margin: 4px 0 12px; }
   .bar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 10px; font-size: 14px; }
   .bar select, .bar button { font: inherit; padding: 6px 10px; border-radius: 6px; border: 1px solid #b6c0bb; background: #fff; cursor: pointer; }
+  .bar button:disabled { opacity: .4; cursor: default; }
   .bar button.primary { background: #1b7a43; color: #fff; border-color: #1b7a43; }
   .scores { display: flex; justify-content: space-between; align-items: center; margin: 8px 0; font-size: 18px; font-weight: 600; }
   .scores .side { display: flex; align-items: center; gap: 8px; padding: 4px 10px; border-radius: 8px; border: 2px solid transparent; }
@@ -21,18 +22,25 @@
   #board { display: grid; grid-template-columns: repeat(8, 1fr); gap: 2px; background: var(--line); padding: 2px; border-radius: 6px; width: 100%; aspect-ratio: 1; }
   .cell { background: var(--board); position: relative; display: flex; align-items: center; justify-content: center; border: 0; padding: 0; cursor: default; }
   .cell.legal { cursor: pointer; }
-  .cell.legal.mine:hover { background: #249a56; }
-  .cell.legal.mine::after { content: ""; width: 22%; height: 22%; border-radius: 50%; background: rgba(0,0,0,.28); }
-  .cell .hint { position: absolute; font-size: 11px; font-weight: 700; color: #fff; text-shadow: 0 0 3px #000; pointer-events: none; }
+  .cell.legal:hover { background: #249a56; }
+  .cell.legal::after { content: ""; width: 22%; height: 22%; border-radius: 50%; background: rgba(0,0,0,.28); }
+  .cell.best { box-shadow: inset 0 0 0 3px #4fc3f7; }
+  .cell .hint { position: absolute; font-size: 11px; font-weight: 700; color: #fff; text-shadow: 0 0 3px #000; pointer-events: none; z-index: 1; }
   .disc { width: 82%; height: 82%; border-radius: 50%; box-shadow: 0 2px 3px rgba(0,0,0,.45); transition: background .35s, transform .35s; }
   .disc.b { background: radial-gradient(circle at 35% 30%, #555, #000 70%); }
   .disc.w { background: radial-gradient(circle at 35% 30%, #fff, #cfcfcf 80%); }
-  .disc.flip { transform: scale(.85); }
   .cell.last::before { content: ""; position: absolute; inset: 3px; border: 3px solid #e0a100; border-radius: 4px; pointer-events: none; }
   #status { min-height: 24px; margin: 12px 0 6px; font-size: 15px; }
+  .nav { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; margin: 8px 0; font-size: 14px; }
+  .nav button { font: inherit; padding: 6px 10px; border-radius: 6px; border: 1px solid #b6c0bb; background: #fff; cursor: pointer; }
+  .nav button:disabled { opacity: .4; cursor: default; }
+  .nav .pos { margin-left: auto; color: #52606d; }
+  #moves { display: flex; flex-wrap: wrap; gap: 4px; margin: 6px 0; font-size: 12px; max-height: 110px; overflow-y: auto; }
+  #moves button { font: inherit; padding: 2px 6px; border-radius: 4px; border: 1px solid #c8d0cc; background: #fff; cursor: pointer; }
+  #moves button.cur { background: #1b7a43; color: #fff; border-color: #1b7a43; }
   .eval { margin-top: 8px; font-size: 13px; color: #52606d; }
-  .evalbar { height: 10px; background: #111; border-radius: 5px; overflow: hidden; margin-top: 4px; }
-  .evalbar > div { height: 100%; background: #fff; width: 50%; transition: width .3s; }
+  .evalbar { height: 10px; background: #fff; border: 1px solid #888; border-radius: 5px; overflow: hidden; margin-top: 4px; }
+  .evalbar > div { height: 100%; background: #111; width: 50%; transition: width .3s; }
   label.chk { display: flex; align-items: center; gap: 4px; }
 </style>
 </head>
@@ -54,7 +62,10 @@
       <option value="6">6手読み(最強・少し遅い)</option>
     </select>
     <button class="primary" id="newgame">新しいゲーム</button>
-    <label class="chk"><input type="checkbox" id="hint"> ヒント(Q値)</label>
+  </div>
+  <div class="bar">
+    <label class="chk"><input type="checkbox" id="hint"> 検討表示(各手のQ値と推奨手)</label>
+    <label class="chk"><input type="checkbox" id="auto" checked> AI自動応手</label>
   </div>
   <div class="scores">
     <div class="side" id="sideB"><span class="dot b"></span><span id="scoreB">2</span></div>
@@ -62,7 +73,16 @@
   </div>
   <div id="board"></div>
   <div id="status"></div>
-  <div class="eval">AIの勝率予想(AI視点の直近の手)
+  <div class="nav">
+    <button id="first" title="最初の局面 (Home)">⏮</button>
+    <button id="back" title="一手戻る (←)">◀ 一手戻る</button>
+    <button id="forward" title="一手進める (→)">一手進める ▶</button>
+    <button id="last" title="最後の局面 (End)">⏭</button>
+    <button id="aimove" title="今の局面でAIに1手打たせる">AIに打たせる</button>
+    <span class="pos" id="pos"></span>
+  </div>
+  <div id="moves"></div>
+  <div class="eval"><span id="evallabel">局面評価</span>
     <div class="evalbar"><div id="evalfill"></div></div>
     <span id="evaltext">-</span>
   </div>
@@ -84,11 +104,16 @@
     cells.push(b);
   }
 
-  let state = null;       // サーバから返った最新状態
+  // history[0] = 初期局面, history[k] = k手目を打った直後の局面。cursor が今表示している局面。
+  // 戻って別の手を打つと、その先の履歴は新しい手順に置き換わる(同じ手なら履歴を残したまま進む)。
+  let history = [];
+  let cursor = 0;
   let human = 1;          // 人間の色 1=黒 -1=白
-  let busy = false;
-  let lastMove = null, lastFlipped = [];
-  let gen = 0;            // 新ゲーム時に進行中の処理を無効化する世代番号
+  let busy = false;       // AIの思考中など
+  let gen = 0;            // 新ゲーム/履歴移動時に進行中の処理を無効化する世代番号
+  let analysis = null;    // 現局面の検討結果 { move, value }
+  let analysisToken = 0;
+  const cur = () => history[cursor];
 
   // 学習済みモデルはブラウザ内で読み込み、推論も対局ロジックもすべてクライアント側で動く(サーバ不要)
   const nets = {};
@@ -103,20 +128,24 @@
   }
   const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   const name = (p) => (p === 1 ? '黒' : '白');
+  const coord = (i) => 'abcdefgh'[i & 7] + ((i >> 3) + 1);
+  const depthNow = () => parseInt($('depth').value, 10);
 
   function render() {
-    const s = state;
+    const s = cur();
+    const showHint = $('hint').checked;
     for (let i = 0; i < 64; i++) {
       const el = cells[i];
       const v = s.board[i];
-      const myTurn = !s.over && s.player === human && !busy;
-      el.className = 'cell' + (s.legal[i] && myTurn ? ' legal mine' : '') + (i === lastMove ? ' last' : '');
+      const clickable = s.legal[i] && !s.over && !busy;
+      el.className = 'cell' + (clickable ? ' legal' : '') + (i === s.move ? ' last' : '')
+        + (showHint && analysis && analysis.move === i && !s.over ? ' best' : '');
       el.innerHTML = '';
       if (v !== 0) {
         const d = document.createElement('div');
         d.className = 'disc ' + (v === 1 ? 'b' : 'w');
         el.appendChild(d);
-      } else if (s.legal[i] && !s.over && $('hint').checked) {
+      } else if (s.legal[i] && !s.over && showHint) {
         const h = document.createElement('span');
         h.className = 'hint';
         h.textContent = Math.round((s.q[i] + 1) * 50) + '%';
@@ -127,77 +156,151 @@
     $('scoreW').textContent = s.white;
     $('sideB').classList.toggle('turn', !s.over && s.player === 1);
     $('sideW').classList.toggle('turn', !s.over && s.player === -1);
+
+    const last = history.length - 1;
+    $('first').disabled = $('back').disabled = busy || cursor === 0;
+    $('forward').disabled = $('last').disabled = busy || cursor === last;
+    $('aimove').disabled = busy || s.over;
+    $('pos').textContent = `${cursor} / ${last} 手` + (cursor < last ? '(途中の局面)' : '');
+
+    const box = $('moves');
+    box.innerHTML = '';
+    for (let k = 1; k <= last; k++) {
+      const b = document.createElement('button');
+      const st = history[k];
+      b.textContent = `${k}.${coord(st.move)}`;
+      b.title = `${name(st.mover)} ${coord(st.move)}`;
+      b.style.borderLeft = `6px solid ${st.mover === 1 ? '#111' : '#ddd'}`;
+      if (k === cursor) b.className = 'cur';
+      b.addEventListener('click', () => goto(k));
+      box.appendChild(b);
+    }
   }
 
   function setStatus(t) { $('status').textContent = t; }
 
-  function setEval(v) {
-    if (v === null || v === undefined) return;
-    const pct = (v + 1) * 50;
-    $('evalfill').style.width = pct.toFixed(0) + '%';
-    $('evaltext').textContent = 'AI勝率 ' + pct.toFixed(0) + '%';
-  }
-
   function finalMessage() {
-    const s = state;
-    const w = s.winner;
+    const s = cur();
     const score = `黒 ${s.black} - 白 ${s.white}`;
-    if (w === 0) return `引き分け(${score})`;
-    return (w === human ? 'あなたの勝ち!' : 'AIの勝ち') + `(${score})`;
+    if (s.winner === 0) return `引き分け(${score})`;
+    return (s.winner === human ? 'あなたの勝ち!' : 'AIの勝ち') + `(${score})`;
   }
 
-  // 1手進めて(アニメーション用に flipped を保持)state を更新
-  async function applyStep(body, gid) {
-    const prevPlayer = state.player;
+  function idleStatus() {
+    const s = cur();
+    if (s.over) return setStatus(finalMessage());
+    const prefix = s.passed ? `${name(-s.player)}は打てる場所がないためパス。` : '';
+    if (s.player === human) setStatus(`${prefix}あなた(${name(human)})の番です`);
+    else setStatus(`${prefix}AI(${name(s.player)})の番です` + ($('auto').checked ? '' : '(「AIに打たせる」で打たせます)'));
+  }
+
+  // 現局面の検討(局面評価 + 推奨手)。AIの探索と同じ深さで読む。
+  function updateEval() {
+    const token = ++analysisToken;
+    const s = cur();
+    analysis = null;
+    $('evallabel').textContent = `局面評価(${depthNow()}手読み): 黒の勝率予想`;
+    if (s.over) {
+      const pct = s.winner === 1 ? 100 : s.winner === -1 ? 0 : 50;
+      $('evalfill').style.width = pct + '%';
+      $('evaltext').textContent = '終局';
+      return;
+    }
+    $('evaltext').textContent = '計算中…';
+    setTimeout(async () => {
+      if (token !== analysisToken) return;
+      try {
+        const net = await currentNet();
+        if (token !== analysisToken) return;
+        const r = Game.analyze(s, net, depthNow());
+        if (token !== analysisToken || !r) return;
+        analysis = r;
+        const black = (r.value * s.player + 1) * 50; // 手番側の評価 → 黒視点の勝率
+        $('evalfill').style.width = black.toFixed(0) + '%';
+        $('evaltext').textContent = `黒 ${black.toFixed(0)}% / 白 ${(100 - black).toFixed(0)}%` + `(推奨手 ${coord(r.move)})`;
+        render();
+      } catch (e) { $('evaltext').textContent = 'エラー: ' + e.message; }
+    }, 20);
+  }
+
+  function refresh() { render(); idleStatus(); updateEval(); }
+
+  // 履歴上の手を確定する。res = Game.step の結果。同じ手なら先の履歴を残す。
+  function commit(res, mover) {
+    res.mover = mover;
+    const next = history[cursor + 1];
+    if (next && next.move === res.move && next.mover === mover) { cursor++; return; }
+    history.length = cursor + 1;
+    history.push(res);
+    cursor++;
+  }
+
+  function goto(k) {
+    gen++; busy = false; // 進行中のAI思考は破棄
+    cursor = Math.max(0, Math.min(history.length - 1, k));
+    refresh();
+  }
+
+  async function playMove(cell, gid) {
     const net = await currentNet();
-    const depth = parseInt($('depth').value, 10);
-    if (body.cell === undefined) { setStatus(`AI(${name(-human)})が ${depth}手先まで読んでいます…`); await sleep(30); } // 描画を先に反映
-    const res = Game.step(state, body.cell, net, depth);
+    const depth = depthNow();
+    const s = cur();
+    if (cell === null) { setStatus(`AI(${name(s.player)})が ${depth}手先まで読んでいます…`); render(); await sleep(30); }
     if (gid !== gen) return null;
-    state = res;
-    lastMove = res.move;
-    lastFlipped = res.flipped;
-    render();
-    if (res.value !== null) setEval(res.value);
-    return { res, mover: prevPlayer };
+    const res = Game.step(s, cell, net, depth);
+    if (gid !== gen) return null;
+    commit(res, s.player);
+    return res;
   }
 
+  // 人間の手番でない間、AIが打ち続ける(人間がパスのときは連続で打つ)
   async function aiLoop(gid) {
-    while (!state.over && state.player !== human) {
+    while (!cur().over && cur().player !== human && $('auto').checked) {
       busy = true; render();
-      setStatus(`AI(${name(-human)})が考え中…`);
+      setStatus(`AI(${name(cur().player)})が考え中…`);
       await sleep(450);
       if (gid !== gen) return;
-      const out = await applyStep({}, gid);
-      if (!out) return;
-      if (state.over) break;
-      if (state.passed) {
-        // AIが打った後、人間がパス → もう一度AI
+      const res = await playMove(null, gid);
+      if (!res) return;
+      render();
+      if (cur().over) break;
+      if (cur().passed) {
         setStatus(`${name(human)}(あなた)は打てる場所がないためパス`);
         await sleep(900);
+        if (gid !== gen) return;
       }
     }
-    busy = false; render();
-    if (state.over) setStatus(finalMessage());
-    else setStatus(`あなた(${name(human)})の番です`);
+    busy = false;
+    refresh();
   }
 
   async function onCell(i) {
-    if (busy || !state || state.over || state.player !== human || !state.legal[i]) return;
-    const gid = gen;
+    const s = cur();
+    if (busy || s.over || !s.legal[i]) return;
+    const gid = ++gen;
     try {
       busy = true;
-      const out = await applyStep({ cell: i }, gid);
-      if (!out) return;
+      const res = await playMove(i, gid);
+      if (!res) return;
       busy = false;
-      if (state.over) { render(); setStatus(finalMessage()); return; }
-      if (state.passed) {
-        // 人間が打った後、AIがパス → 続けて人間の番
-        render();
-        setStatus(`AI(${name(-human)})は打てる場所がないためパス。もう一度あなたの番です`);
-        return;
-      }
-      await aiLoop(gid);
+      render();
+      // 人間の色の手番でなければ(自動応手がオンなら)AIが返す。検討のため相手側の手を自分で打つこともできる。
+      if (!cur().over && cur().player !== human && $('auto').checked) { await aiLoop(gid); return; }
+      refresh();
+    } catch (e) {
+      busy = false; render(); setStatus('エラー: ' + e.message);
+    }
+  }
+
+  async function aiMoveOnce() {
+    if (busy || cur().over) return;
+    const gid = ++gen;
+    try {
+      busy = true; render();
+      const res = await playMove(null, gid);
+      if (!res) return;
+      busy = false;
+      refresh();
     } catch (e) {
       busy = false; render(); setStatus('エラー: ' + e.message);
     }
@@ -206,14 +309,13 @@
   async function newGame() {
     const gid = ++gen;
     human = parseInt($('color').value, 10);
-    busy = false; lastMove = null; lastFlipped = [];
-    $('evalfill').style.width = '50%'; $('evaltext').textContent = '-';
+    busy = false;
     try {
-      state = Game.newGame(await currentNet());
+      history = [Game.newGame(await currentNet())];
+      cursor = 0;
       if (gid !== gen) return;
-      render();
-      if (state.player !== human) await aiLoop(gid);
-      else setStatus(`あなた(${name(human)})の番です`);
+      refresh();
+      if (cur().player !== human && $('auto').checked) await aiLoop(gid);
     } catch (e) {
       setStatus('エラー: ' + e.message);
     }
@@ -229,8 +331,22 @@
     }
     $('newgame').addEventListener('click', newGame);
     $('color').addEventListener('change', newGame);
-    $('model').addEventListener('change', () => { if (state) { render(); } });
-    $('hint').addEventListener('change', () => { if (state) render(); });
+    $('model').addEventListener('change', () => { if (history.length) refresh(); });
+    $('depth').addEventListener('change', () => { if (history.length) updateEval(); });
+    $('hint').addEventListener('change', () => { if (history.length) render(); });
+    $('first').addEventListener('click', () => goto(0));
+    $('back').addEventListener('click', () => goto(cursor - 1));
+    $('forward').addEventListener('click', () => goto(cursor + 1));
+    $('last').addEventListener('click', () => goto(history.length - 1));
+    $('aimove').addEventListener('click', aiMoveOnce);
+    document.addEventListener('keydown', (e) => {
+      const t = e.target && e.target.tagName;
+      if (t === 'SELECT' || t === 'INPUT' || busy || !history.length) return;
+      if (e.key === 'ArrowLeft') { e.preventDefault(); goto(cursor - 1); }
+      else if (e.key === 'ArrowRight') { e.preventDefault(); goto(cursor + 1); }
+      else if (e.key === 'Home') { e.preventDefault(); goto(0); }
+      else if (e.key === 'End') { e.preventDefault(); goto(history.length - 1); }
+    });
     newGame();
   }
   init();

@@ -64,7 +64,15 @@
     return res;
   }
 
-  const api = { newGame, step };
+  // 現在の局面を depth 手読みで評価する(検討用)。手番側から見た { move, value }、打てる手がなければ null。
+  function analyze(state, net, depth) {
+    const board = Int8Array.from(state.board);
+    const mask = new Uint8Array(64);
+    if (Othello.legalMask(board, state.player, mask) === 0) return null;
+    return getSearcher(net, depth || 1)(board, state.player, mask);
+  }
+
+  const api = { newGame, step, analyze };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.Game = api;
 })(typeof window !== 'undefined' ? window : globalThis);
