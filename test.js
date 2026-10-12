@@ -116,3 +116,58 @@ console.log('gradient OK');
   assert.throws(() => Game.step(Game.newGame(web), 0, web), /illegal move/);
   console.log('Game logic OK (moves=' + moves + ', ' + b + '-' + w + ')');
 }
+
+// --- 探索(public/search.js): 深さ1は従来の最大Q、深さ2以上は素朴なminimaxと同じ価値になるか ---
+{
+  const fs = require('fs');
+  const path = require('path');
+  const NN = require('./public/nn');
+  const { makeSearch } = require('./public/search');
+  const Game = require('./public/game');
+  const net = NN.fromJSON(JSON.parse(fs.readFileSync(path.join(__dirname, 'output', 'model_final.json'), 'utf8')));
+  function plain(board, p, rem) { // alpha-beta なしの参照実装
+    const m = new Uint8Array(64);
+    if (Othello.legalMask(board, p, m) === 0) {
+      const m2 = new Uint8Array(64);
+      if (Othello.legalMask(board, -p, m2) === 0) { const [b, w] = Othello.countDiscs(board); const d = (b - w) * p; return d > 0 ? 1 : d < 0 ? -1 : 0; }
+      return -plain(board, -p, rem);
+    }
+    if (rem === 1) { const q = net.qValues(board, p); let mx = -Infinity; for (let i = 0; i < 64; i++) if (m[i] && q[i] > mx) mx = q[i]; return mx; }
+    let best = -Infinity;
+    for (let i = 0; i < 64; i++) { if (!m[i]) continue; const c = board.slice(); Othello.applyMove(c, p, i); best = Math.max(best, -plain(c, -p, rem - 1)); }
+    return best;
+  }
+  const rs = mulberry32(11);
+  let checked = 0;
+  for (let t = 0; t < 40; t++) {
+    const board = Othello.initialBoard();
+    let p = 1;
+    for (let k = 0, n = Math.floor(rs() * 58); k < n; k++) {
+      const m = new Uint8Array(64);
+      if (Othello.legalMask(board, p, m) === 0) { p = -p; if (Othello.legalMask(board, p, m) === 0) break; }
+      const cs = []; for (let c = 0; c < 64; c++) if (m[c]) cs.push(c);
+      Othello.applyMove(board, p, cs[Math.floor(rs() * cs.length)]); p = -p;
+    }
+    const mask = new Uint8Array(64);
+    if (Othello.legalMask(board, p, mask) === 0) continue;
+    checked++;
+    const q = net.qValues(board, p);
+    let am = -1, aq = -Infinity; for (let i = 0; i < 64; i++) if (mask[i] && q[i] > aq) { aq = q[i]; am = i; }
+    const r1 = makeSearch(net, 1)(board, p, mask);
+    assert.strictEqual(r1.move, am);
+    for (const d of [2, 3, 4]) {
+      const r = makeSearch(net, d)(board, p, mask);
+      const c = board.slice(); Othello.applyMove(c, p, r.move);
+      const vChosen = -plain(c, -p, d - 1);
+      assert.ok(Math.abs(vChosen - r.value) < 1e-6, 'search value mismatch at depth ' + d);
+      let bv = -Infinity;
+      for (let i = 0; i < 64; i++) { if (!mask[i]) continue; const c2 = board.slice(); Othello.applyMove(c2, p, i); bv = Math.max(bv, -plain(c2, -p, d - 1)); }
+      assert.ok(Math.abs(bv - r.value) < 1e-6, 'search is not optimal at depth ' + d);
+    }
+  }
+  // Game.step が深さ指定で動く
+  const s0 = Game.newGame(net);
+  const s1 = Game.step(s0, null, net, 3);
+  assert.ok(s1.move !== null && s1.value !== null);
+  console.log('Search OK (' + checked + ' positions, depth 1-4)');
+}

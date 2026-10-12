@@ -36,10 +36,31 @@ node evaluate.js output/model_best.json 500   # 対戦評価
 node server.js          # → http://localhost:8765/   (Windows は start.bat をダブルクリックでも可)
 ```
 
-- 黒/白の選択、AIモデル(最終/ベスト)の切り替え、AIの勝率予想バー、合法手のヒント(Q値を勝率換算で表示)付き。
+- 黒/白の選択、AIモデル(最終/ベスト)の切り替え、**AIの読みの深さ(1〜6手)**、AIの勝率予想バー、合法手のヒント(Q値を勝率換算で表示)付き。
 - 対局ロジックとAI推論はすべてブラウザ内(`public/game.js` `public/nn.js` と `othello.js`)で動く静的サイト。`server.js` は `dist/` を作って配信するだけ。
 - `node scripts/build-site.js` で公開用の `dist/` を作成(`public/` + `othello.js` + `models/{final,best}.json`)。
 - 既定は `127.0.0.1` のみで待ち受け。LAN内の別端末から使う場合は `node server.js --host 0.0.0.0`。
+
+## 探索(読みの深さ)
+
+重みはそのまま、Q値を葉の評価にした minimax(alpha-beta)で数手先を読める(`public/search.js`)。
+深さ1は探索なし(最大Qの手)、深さnは n 手先まで読み、最後の1手は `max_a Q(s,a)` で評価、終局は実際の勝敗を使う。
+
+```
+node experiment_search.js --depths 1,2,3,4 --games 1000 --h2h 1000   # 結果: results/search_experiment.json
+```
+
+model_final.json での結果(各1000局、先手後手交代、序盤4手ランダム):
+
+| 深さ | vs ランダム | vs 貪欲 | vs 深さ1 |
+|---|---|---|---|
+| 1 | 96.8% | 95.1% | - |
+| 2 | 99.2% | 94.2% | 92.1% |
+| 3 | 99.7% | 98.8% | 95.4% |
+| 4 | 99.9% | 98.6% | 99.8% |
+
+(スコア = 勝ち + 0.5×引き分け。決定的な打ち手なので各局は独立ではなく、信頼区間は実際より狭め。)
+1手あたりの平均時間(Node): 深さ3 約1ms / 4 約5ms / 5 約14ms / 6 約60ms。
 
 ## GitHub Pages で公開
 

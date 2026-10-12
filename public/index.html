@@ -44,6 +44,15 @@
     <select id="color"><option value="1">黒(先手)</option><option value="-1">白(後手)</option></select>
     <span>AIモデル:</span>
     <select id="model"></select>
+    <span>AIの読み:</span>
+    <select id="depth">
+      <option value="1">1手(探索なし)</option>
+      <option value="2">2手読み</option>
+      <option value="3" selected>3手読み</option>
+      <option value="4">4手読み</option>
+      <option value="5">5手読み</option>
+      <option value="6">6手読み(最強・少し遅い)</option>
+    </select>
     <button class="primary" id="newgame">新しいゲーム</button>
     <label class="chk"><input type="checkbox" id="hint"> ヒント(Q値)</label>
   </div>
@@ -60,6 +69,7 @@
 </main>
 <script src="othello.js"></script>
 <script src="nn.js"></script>
+<script src="search.js"></script>
 <script src="game.js"></script>
 <script>
 (() => {
@@ -140,7 +150,9 @@
   async function applyStep(body, gid) {
     const prevPlayer = state.player;
     const net = await currentNet();
-    const res = Game.step(state, body.cell, net);
+    const depth = parseInt($('depth').value, 10);
+    if (body.cell === undefined) { setStatus(`AI(${name(-human)})が ${depth}手先まで読んでいます…`); await sleep(30); } // 描画を先に反映
+    const res = Game.step(state, body.cell, net, depth);
     if (gid !== gen) return null;
     state = res;
     lastMove = res.move;
