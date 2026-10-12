@@ -110,6 +110,7 @@
   let cursor = 0;
   let human = 1;          // 人間の色 1=黒 -1=白
   let busy = false;       // AIの思考中など
+  let reviewMode = false; // 一度でも終局したら true(新しいゲームまで継続)。戻る/進むはこの間だけ使える
   let gen = 0;            // 新ゲーム/履歴移動時に進行中の処理を無効化する世代番号
   let analysis = null;    // 現局面の検討結果 { move, value }
   let analysisToken = 0;
@@ -158,10 +159,13 @@
     $('sideW').classList.toggle('turn', !s.over && s.player === -1);
 
     const last = history.length - 1;
-    $('first').disabled = $('back').disabled = busy || cursor === 0;
-    $('forward').disabled = $('last').disabled = busy || cursor === last;
+    const nav = reviewMode && !busy;
+    $('first').disabled = $('back').disabled = !nav || cursor === 0;
+    $('forward').disabled = $('last').disabled = !nav || cursor === last;
     $('aimove').disabled = busy || s.over;
-    $('pos').textContent = `${cursor} / ${last} 手` + (cursor < last ? '(途中の局面)' : '');
+    $('pos').textContent = reviewMode
+      ? `${cursor} / ${last} 手` + (cursor < last ? '(途中の局面)' : '')
+      : `${cursor} 手目(戻る/進むは終局後に使えます)`;
 
     const box = $('moves');
     box.innerHTML = '';
@@ -172,6 +176,7 @@
       b.title = `${name(st.mover)} ${coord(st.move)}`;
       b.style.borderLeft = `6px solid ${st.mover === 1 ? '#111' : '#ddd'}`;
       if (k === cursor) b.className = 'cur';
+      b.disabled = !reviewMode;
       b.addEventListener('click', () => goto(k));
       box.appendChild(b);
     }
@@ -228,6 +233,7 @@
   // 履歴上の手を確定する。res = Game.step の結果。同じ手なら先の履歴を残す。
   function commit(res, mover) {
     res.mover = mover;
+    if (res.over) reviewMode = true;
     const next = history[cursor + 1];
     if (next && next.move === res.move && next.mover === mover) { cursor++; return; }
     history.length = cursor + 1;
@@ -236,6 +242,7 @@
   }
 
   function goto(k) {
+    if (!reviewMode) return;
     gen++; busy = false; // 進行中のAI思考は破棄
     cursor = Math.max(0, Math.min(history.length - 1, k));
     refresh();
@@ -309,7 +316,7 @@
   async function newGame() {
     const gid = ++gen;
     human = parseInt($('color').value, 10);
-    busy = false;
+    busy = false; reviewMode = false;
     try {
       history = [Game.newGame(await currentNet())];
       cursor = 0;
@@ -341,7 +348,7 @@
     $('aimove').addEventListener('click', aiMoveOnce);
     document.addEventListener('keydown', (e) => {
       const t = e.target && e.target.tagName;
-      if (t === 'SELECT' || t === 'INPUT' || busy || !history.length) return;
+      if (t === 'SELECT' || t === 'INPUT' || busy || !history.length || !reviewMode) return;
       if (e.key === 'ArrowLeft') { e.preventDefault(); goto(cursor - 1); }
       else if (e.key === 'ArrowRight') { e.preventDefault(); goto(cursor + 1); }
       else if (e.key === 'Home') { e.preventDefault(); goto(0); }
