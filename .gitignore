@@ -4,3 +4,5 @@ output/checkpoint.json
 output/model_latest.json
 *.tmp
 server_test.log
+output_v2/checkpoint.json
+output_v2/model_latest.json

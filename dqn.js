@@ -3,6 +3,7 @@
 // Q値は「その手を打った側から見た最終的な勝敗(-1〜+1)」の予測。報酬は終局時の勝ち(+1)/引き分け(0)/負け(-1)のみ。
 
 const Othello = require('./othello');
+const Features = require('./public/features');
 
 // ---------- 乱数 ----------
 function mulberry32(seed) {
@@ -36,10 +37,11 @@ for (let k = 0; k < 8; k++) {
 }
 
 // ---------- MLP ----------
-// 入力128(自分の石64 + 相手の石64) → 隠れ層(ReLU)... → 出力64(各マスへ打ったときのQ, tanh)
+// 入力(features: v1=128 / v2=259, public/features.js) → 隠れ層(ReLU)... → 出力64(各マスへ打ったときのQ, tanh)
 class Net {
-  constructor(sizes, rng) {
+  constructor(sizes, rng, features = 'v1') {
     this.sizes = sizes;
+    this.features = features;
     this.L = sizes.length - 1;
     this.W = []; this.b = [];
     for (let l = 0; l < this.L; l++) {
@@ -182,7 +184,7 @@ class Adam {
 //   sign  : 次に打つのが相手なら -1、相手がパスで自分がもう一度打つなら +1
 //   target = done ? r : sign * max_{a' 合法} Qtarget(s2, a')
 class Replay {
-  constructor(capacity) {
+  constructor(capacity, withLegal = false) {
     this.cap = capacity; this.size = 0; this.pos = 0;
     this.s = new Int8Array(capacity * 64);
     this.s2 = new Int8Array(capacity * 64);
@@ -191,17 +193,25 @@ class Replay {
     this.r = new Float32Array(capacity);
     this.done = new Uint8Array(capacity);
     this.sign = new Int8Array(capacity);
+    if (withLegal) { // 特徴量 v2 用: s の自分/相手の着手可能マス、s2 の相手の着手可能マス
+      this.sMe = new Uint8Array(capacity * 64);
+      this.sOpp = new Uint8Array(capacity * 64);
+      this.s2Opp = new Uint8Array(capacity * 64);
+    }
   }
-  push(s, a, r, done, s2, mask2, sign) {
+  push(s, a, r, done, s2, mask2, sign, sMe, sOpp, s2Opp) {
     const i = this.pos;
     this.s.set(s, i * 64);
     this.a[i] = a; this.r[i] = r; this.done[i] = done; this.sign[i] = sign;
+    if (this.sMe) { this.sMe.set(sMe, i * 64); this.sOpp.set(sOpp, i * 64); }
     if (done) {
       this.s2.fill(0, i * 64, i * 64 + 64);
       this.mask2.fill(0, i * 64, i * 64 + 64);
+      if (this.sMe) this.s2Opp.fill(0, i * 64, i * 64 + 64);
     } else {
       this.s2.set(s2, i * 64);
       this.mask2.set(mask2, i * 64);
+      if (this.sMe) this.s2Opp.set(s2Opp, i * 64);
     }
     this.pos = (this.pos + 1) % this.cap;
     if (this.size < this.cap) this.size++;
@@ -212,16 +222,17 @@ class Replay {
 class DQN {
   constructor(opts) {
     this.hidden = opts.hidden;
-    this.sizes = [128, ...opts.hidden, 64];
+    this.features = opts.features || 'v1';
+    this.sizes = [Features.SPECS[this.features].n, ...opts.hidden, 64];
     this.batch = opts.batch;
     this.gamma = 1; // 勝敗のみの報酬なので割引なし
     this.rng = mulberry32(opts.seed ?? 12345);
-    this.online = new Net(this.sizes, this.rng);
-    this.target = new Net(this.sizes, null);
+    this.online = new Net(this.sizes, this.rng, this.features);
+    this.target = new Net(this.sizes, null, this.features);
     this.target.copyFrom(this.online);
     this.opt = new Adam(this.online, opts.lr);
     this.grads = new Grads(this.online);
-    this.replay = new Replay(opts.replaySize);
+    this.replay = new Replay(opts.replaySize, this.features !== 'v1');
     this.targetSync = opts.targetSync;
     this.trainSteps = 0;
 
@@ -239,10 +250,7 @@ class DQN {
   qValues(persp, net = this.online) {
     const x = this.A1[0];
     x.fill(0);
-    for (let i = 0; i < 64; i++) {
-      const v = persp[i];
-      if (v === 1) x[i] = 1; else if (v === -1) x[64 + i] = 1;
-    }
+    Features.encodeFromBoard(this.features, persp, 1, x, 0);
     net.forward(this.A1, 1);
     return this.A1[this.online.L];
   }
@@ -264,7 +272,7 @@ class DQN {
   }
 
   trainStep() {
-    const R = this.replay, B = this.batch, rng = this.rng;
+    const R = this.replay, B = this.batch, rng = this.rng, nin = this.sizes[0], spec = this.features;
     const X = this.Aon[0], X2 = this.Atg[0];
     X.fill(0); X2.fill(0);
     const mask2 = new Uint8Array(B * 64); // 対称変換後の合法手
@@ -273,16 +281,11 @@ class DQN {
       const i = Math.floor(rng() * R.size);
       idxs[s] = i;
       const perm = SYM[Math.floor(rng() * 8)];
-      const o = s * 128, base = i * 64;
-      for (let c = 0; c < 64; c++) {
-        const nc = perm[c];
-        const v = R.s[base + c];
-        if (v === 1) X[o + nc] = 1; else if (v === -1) X[o + 64 + nc] = 1;
-        if (!R.done[i]) {
-          const v2 = R.s2[base + c];
-          if (v2 === 1) X2[o + nc] = 1; else if (v2 === -1) X2[o + 64 + nc] = 1;
-          mask2[s * 64 + nc] = R.mask2[base + c];
-        }
+      const o = s * nin, base = i * 64, end = base + 64;
+      Features.encode(spec, R.s.subarray(base, end), R.sMe && R.sMe.subarray(base, end), R.sOpp && R.sOpp.subarray(base, end), X, o, perm);
+      if (!R.done[i]) {
+        Features.encode(spec, R.s2.subarray(base, end), R.mask2.subarray(base, end), R.s2Opp && R.s2Opp.subarray(base, end), X2, o, perm);
+        for (let c = 0; c < 64; c++) mask2[s * 64 + perm[c]] = R.mask2[base + c];
       }
       this.act[s] = perm[R.a[i]];
     }
@@ -325,10 +328,10 @@ const fromB64 = (s, target) => {
 };
 
 function netToJSON(net) {
-  return { sizes: net.sizes, W: net.W.map(b64), b: net.b.map(b64) };
+  return { sizes: net.sizes, features: net.features, W: net.W.map(b64), b: net.b.map(b64) };
 }
 function netFromJSON(j) {
-  const net = new Net(j.sizes, null);
+  const net = new Net(j.sizes, null, j.features || 'v1');
   for (let l = 0; l < net.L; l++) { fromB64(j.W[l], net.W[l]); fromB64(j.b[l], net.b[l]); }
   return net;
 }
@@ -348,12 +351,9 @@ function makePolicy(net) {
   const A = net.makeBuffers(1);
   const persp = new Int8Array(64);
   return function policy(board, player, mask) {
-    Othello.perspective(board, player, persp);
     const x = A[0];
     x.fill(0);
-    for (let i = 0; i < 64; i++) {
-      if (persp[i] === 1) x[i] = 1; else if (persp[i] === -1) x[64 + i] = 1;
-    }
+    Features.encodeFromBoard(net.features, board, player, x, 0);
     net.forward(A, 1);
     const q = A[net.L];
     let best = -1, bq = -Infinity;

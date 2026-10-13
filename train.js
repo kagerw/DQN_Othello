@@ -2,7 +2,7 @@
 // DQN によるオセロの自己対戦学習。報酬は終局時の勝ち(+1)/引き分け(0)/負け(-1)のみ。
 //   node train.js [--minutes 60] [--episodes N] [--hidden 256,128] [--batch 64] [--lr 0.0005]
 //                 [--train-every 2] [--eps-start 0.6] [--eps-end 0.05] [--eps-decay-episodes 15000]
-//                 [--eval-every 500] [--out output] [--resume] [--seed 1]
+//                 [--eval-every 500] [--out output] [--resume] [--seed 1] [--features v1|v2]
 const fs = require('fs');
 const path = require('path');
 const Othello = require('./othello');
@@ -14,7 +14,7 @@ const args = {
   minutes: Infinity, episodes: Infinity, hidden: '256,128', batch: 64, lr: 0.0005,
   'train-every': 2, 'eps-start': 0.6, 'eps-end': 0.05, 'eps-decay-episodes': 15000,
   'eval-every': 500, 'eval-games': 100, out: 'output', seed: 1, 'replay-size': 200000,
-  'target-sync': 1000, warmup: 5000,
+  'target-sync': 1000, warmup: 5000, features: 'v1',
 };
 const argv = process.argv.slice(2);
 for (let i = 0; i < argv.length; i++) {
@@ -30,7 +30,7 @@ fs.mkdirSync(OUT, { recursive: true });
 const agent = new DQN({
   hidden: String(args.hidden).split(',').map(Number),
   batch: num('batch'), lr: num('lr'), seed: num('seed'),
-  replaySize: num('replay-size'), targetSync: num('target-sync'),
+  replaySize: num('replay-size'), targetSync: num('target-sync'), features: String(args.features),
 });
 
 let episode = 0, elapsedBefore = 0, bestScore = -1;
@@ -53,6 +53,8 @@ const mask = new Uint8Array(64);
 const mask2 = new Uint8Array(64);
 const s = new Int8Array(64);
 const s2 = new Int8Array(64);
+const sOpp = new Uint8Array(64), s2Opp = new Uint8Array(64);
+const withLegal = agent.features !== 'v1';
 let lossSum = 0, lossN = 0, moveCounter = 0;
 
 function runEpisode(eps) {
@@ -61,6 +63,7 @@ function runEpisode(eps) {
   for (;;) {
     if (Othello.legalMask(board, player, mask) === 0) break; // 次の手番は下で必ず合法手持ちを選んでいる
     Othello.perspective(board, player, s);
+    if (withLegal) Othello.legalMask(board, -player, sOpp); // 打つ前の局面での相手の着手可能マス(特徴量 v2 用)
     const a = agent.selectAction(s, mask, eps);
     Othello.applyMove(board, player, a);
 
@@ -74,8 +77,11 @@ function runEpisode(eps) {
       const diff = (b - w) * player;
       r = diff > 0 ? 1 : diff < 0 ? -1 : 0;
     }
-    if (!done) Othello.perspective(board, next, s2);
-    agent.replay.push(s, a, r, done, s2, mask2, sign);
+    if (!done) {
+      Othello.perspective(board, next, s2);
+      if (withLegal) Othello.legalMask(board, -next, s2Opp);
+    }
+    agent.replay.push(s, a, r, done, s2, mask2, sign, mask, sOpp, s2Opp);
 
     if (++moveCounter % num('train-every') === 0 && agent.replay.size >= num('warmup')) {
       lossSum += agent.trainStep(); lossN++;
@@ -114,7 +120,7 @@ const maxSec = num('minutes') * 60;
 let stop = false;
 process.on('SIGINT', () => { stop = true; });
 process.on('SIGTERM', () => { stop = true; });
-console.log(`network: ${agent.sizes.join('-')}  out: ${OUT}`);
+console.log(`network: ${agent.sizes.join('-')}  features: ${agent.features}  out: ${OUT}`);
 
 const maxEpisodes = num('episodes');
 while (!stop) {

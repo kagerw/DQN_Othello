@@ -2,6 +2,9 @@
 // 学習済みモデル(output/model_*.json)の推論専用コード。Node とブラウザの両方で動く。
 // 学習側の dqn.js と同じ計算(ReLU隠れ層 + tanh出力)。test.js で出力一致を検証している。
 (function (root) {
+  const isNode = typeof module !== 'undefined' && module.exports;
+  const Features = isNode ? require('./features') : root.Features;
+
   function b64ToF32(s) {
     const bin = atob(s);
     const u8 = new Uint8Array(bin.length);
@@ -12,20 +15,18 @@
   class QNet {
     constructor(json) {
       this.sizes = json.sizes;
+      this.features = json.features || 'v1'; // 入力の作り方(public/features.js)。古いモデルは v1
       this.L = this.sizes.length - 1;
       this.W = json.W.map(b64ToF32);
       this.b = json.b.map(b64ToF32);
       this.acts = this.sizes.map((n) => new Float32Array(n));
     }
 
-    // player 視点(自分の石=入力0..63, 相手の石=入力64..127)で全64マスのQ値(-1〜+1)を返す
+    // player 視点で全64マスのQ値(-1〜+1)を返す
     qValues(board, player) {
       const A = this.acts, S = this.sizes;
       A[0].fill(0);
-      for (let i = 0; i < 64; i++) {
-        const v = board[i] * player;
-        if (v === 1) A[0][i] = 1; else if (v === -1) A[0][64 + i] = 1;
-      }
+      Features.encodeFromBoard(this.features, board, player, A[0], 0);
       for (let l = 1; l <= this.L; l++) {
         const nin = S[l - 1], nout = S[l];
         const prev = A[l - 1], cur = A[l], W = this.W[l - 1], bias = this.b[l - 1];

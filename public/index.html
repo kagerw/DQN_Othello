@@ -88,6 +88,7 @@
   </div>
 </main>
 <script src="othello.js"></script>
+<script src="features.js"></script>
 <script src="nn.js"></script>
 <script src="search.js"></script>
 <script src="game.js"></script>
@@ -330,7 +331,7 @@
 
   async function init() {
     const models = await (await fetch('models/index.json')).json();
-    const labels = { final: '最終モデル', best: 'ベストモデル', latest: '最新チェックポイント' };
+    const labels = { final: '最終モデル(v1)', best: 'ベストモデル(v1)', v2: '特徴量v2モデル(より強い)', latest: '最新チェックポイント' };
     for (const m of models) {
       const o = document.createElement('option');
       o.value = m; o.textContent = labels[m] || m;

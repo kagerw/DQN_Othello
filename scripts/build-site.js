@@ -1,13 +1,13 @@
 'use strict';
 // 公開用の静的サイト dist/ を作る(GitHub Pages / ローカルの server.js で共通)。
 //   node scripts/build-site.js
-// dist/ = public/ の中身 + othello.js + models/{final,best}.json + models/index.json
+// dist/ = public/ の中身 + othello.js + models/{final,best,v2}.json + models/index.json
 const fs = require('fs');
 const path = require('path');
 
 const ROOT = path.resolve(__dirname, '..');
 const DIST = path.join(ROOT, 'dist');
-const MODELS = { final: 'output/model_final.json', best: 'output/model_best.json' };
+const MODELS = { final: 'output/model_final.json', best: 'output/model_best.json', v2: 'output_v2/model_final.json' };
 
 function build() {
   fs.rmSync(DIST, { recursive: true, force: true });

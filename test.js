@@ -177,3 +177,55 @@ console.log('gradient OK');
   assert.strictEqual(Game.analyze({ board: bd, player: 1 }, net, 3), null);
   console.log('Search OK (' + checked + ' positions, depth 1-4)');
 }
+
+// --- 特徴量 v2(着手可能マス + スカラー): 対称変換で正しく同変か、web推論と学習側が一致するか ---
+{
+  const Features = require('./public/features');
+  const NN = require('./public/nn');
+  const { Net, SYM, netToJSON } = require('./dqn');
+  const rf = mulberry32(2024);
+  const nin = Features.SPECS.v2.n;
+  let checked = 0;
+  for (let t = 0; t < 30; t++) {
+    const board = Othello.initialBoard();
+    let p = 1;
+    for (let k = 0, n = 2 + Math.floor(rf() * 50); k < n; k++) {
+      const m = new Uint8Array(64);
+      if (Othello.legalMask(board, p, m) === 0) { p = -p; if (Othello.legalMask(board, p, m) === 0) break; }
+      const cs = []; for (let c = 0; c < 64; c++) if (m[c]) cs.push(c);
+      Othello.applyMove(board, p, cs[Math.floor(rf() * cs.length)]); p = -p;
+    }
+    const persp = new Int8Array(64), me = new Uint8Array(64), opp = new Uint8Array(64);
+    Othello.perspective(board, p, persp);
+    Othello.legalMask(board, p, me); Othello.legalMask(board, -p, opp);
+    for (const perm of SYM) {
+      const moved = new Int8Array(64);
+      for (let c = 0; c < 64; c++) moved[perm[c]] = board[c];
+      const direct = new Float32Array(nin); Features.encodeFromBoard('v2', moved, p, direct, 0);
+      const viaPerm = new Float32Array(nin); Features.encode('v2', persp, me, opp, viaPerm, 0, perm);
+      for (let i = 0; i < nin; i++) assert.strictEqual(direct[i], viaPerm[i], 'v2 features not equivariant');
+      checked++;
+    }
+  }
+  // ランダム重みの v2 ネットで、学習側(Net.forward)と web(QNet)の出力が一致
+  const net = new Net([nin, 32, 16, 64], mulberry32(5), 'v2');
+  const web = NN.fromJSON(netToJSON(net));
+  assert.strictEqual(web.features, 'v2');
+  const A = net.makeBuffers(1);
+  let md = 0;
+  for (let t = 0; t < 10; t++) {
+    const board = Othello.initialBoard(); let p = 1;
+    for (let k = 0; k < t * 5; k++) {
+      const m = new Uint8Array(64);
+      if (Othello.legalMask(board, p, m) === 0) { p = -p; if (Othello.legalMask(board, p, m) === 0) break; }
+      const cs = []; for (let c = 0; c < 64; c++) if (m[c]) cs.push(c);
+      Othello.applyMove(board, p, cs[Math.floor(rf() * cs.length)]); p = -p;
+    }
+    A[0].fill(0); Features.encodeFromBoard('v2', board, p, A[0], 0);
+    net.forward(A, 1);
+    const q = web.qValues(board, p);
+    for (let i = 0; i < 64; i++) md = Math.max(md, Math.abs(q[i] - A[net.L][i]));
+  }
+  assert.ok(md < 1e-6, 'v2 web/train mismatch');
+  console.log('Features v2 OK (' + checked + ' symmetry checks, web diff ' + md + ')');
+}
