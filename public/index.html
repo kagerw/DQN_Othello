@@ -331,7 +331,7 @@
 
   async function init() {
     const models = await (await fetch('models/index.json')).json();
-    const labels = { final: '最終モデル(v1)', best: 'ベストモデル(v1)', v2: '特徴量v2モデル(より強い)', latest: '最新チェックポイント' };
+    const labels = { v2: '特徴量あり(着手可能マス・空きマス数も入力)', v1: '特徴量なし(盤面のみ)' };
     for (const m of models) {
       const o = document.createElement('option');
       o.value = m; o.textContent = labels[m] || m;

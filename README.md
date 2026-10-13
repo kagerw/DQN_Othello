@@ -36,13 +36,13 @@ node evaluate.js output/model_best.json 500   # 対戦評価
 node server.js          # → http://localhost:8765/   (Windows は start.bat をダブルクリックでも可)
 ```
 
-- 黒/白の選択、AIモデル(最終/ベスト)の切り替え、**AIの読みの深さ(1〜6手)**、AIの勝率予想バー、合法手のヒント(Q値を勝率換算で表示)付き。
+- 黒/白の選択、AIモデル(特徴量あり=v2 / 特徴量なし=v1)の切り替え、**AIの読みの深さ(1〜6手)**、AIの勝率予想バー、合法手のヒント(Q値を勝率換算で表示)付き。
 - **検討機能(終局後のみ。新しいゲームを始めるまで有効)**: 「一手戻る / 一手進める」(ボタン・←→キー)、最初/最後へ、棋譜の手をクリックしてその局面へジャンプ。
   戻った局面で別の手を打つとそこから分岐(同じ手なら履歴を残したまま進む)。戻る/進むでAIは勝手に動かない。
   「AIに打たせる」で今の局面から1手だけAIに打たせられ、「AI自動応手」をオフにすると両側を手で打てる。
   「検討表示」をオンにすると、各手のQ値(勝率換算)と推奨手(水色の枠)が出る。常に局面評価(黒の勝率予想)をバーで表示。
 - 対局ロジックとAI推論はすべてブラウザ内(`public/game.js` `public/nn.js` と `othello.js`)で動く静的サイト。`server.js` は `dist/` を作って配信するだけ。
-- `node scripts/build-site.js` で公開用の `dist/` を作成(`public/` + `othello.js` + `models/{final,best}.json`)。
+- `node scripts/build-site.js` で公開用の `dist/` を作成(`public/` + `othello.js` + `models/{v2,v1}.json`)。
 - 既定は `127.0.0.1` のみで待ち受け。LAN内の別端末から使う場合は `node server.js --host 0.0.0.0`。
 
 ## 探索(読みの深さ)
@@ -100,5 +100,5 @@ v2 の結果: `results/features_v2_experiment.json`、学習ログ: `train_v2.lo
 3. リポジトリの Settings → Pages → Build and deployment → Source を **GitHub Actions** にする
 4. Actions が成功すると `https://<ユーザー名>.github.io/<リポジトリ名>/` で遊べる
 
-公開されるモデルは `output/model_final.json` と `output/model_best.json`(リポジトリにコミットされたもの)。
-再学習したらこの2つを更新してコミット/pushすれば、サイトも更新される。
+公開されるモデルは特徴量あり `output_v2/model_final.json`(画面の初期選択)と、特徴量なし `output/model_final.json`(どちらもリポジトリにコミットされた最終モデル)。
+再学習したらこの2つを更新してコミット/pushすれば、サイトも更新される。`model_best.json` は途中評価が最良だった時点の保存で、サイトでは使わない(最終モデルとほぼ同じ強さ)。

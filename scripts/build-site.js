@@ -1,13 +1,14 @@
 'use strict';
 // 公開用の静的サイト dist/ を作る(GitHub Pages / ローカルの server.js で共通)。
 //   node scripts/build-site.js
-// dist/ = public/ の中身 + othello.js + models/{final,best,v2}.json + models/index.json
+// dist/ = public/ の中身 + othello.js + models/{v2,v1}.json + models/index.json
 const fs = require('fs');
 const path = require('path');
 
 const ROOT = path.resolve(__dirname, '..');
 const DIST = path.join(ROOT, 'dist');
-const MODELS = { final: 'output/model_final.json', best: 'output/model_best.json', v2: 'output_v2/model_final.json' };
+// 公開するモデルは2つ: 特徴量あり(v2)と特徴量なし(v1)。どちらも学習終了時点の最終モデル。先頭が画面の初期選択。
+const MODELS = { v2: 'output_v2/model_final.json', v1: 'output/model_final.json' };
 
 function build() {
   fs.rmSync(DIST, { recursive: true, force: true });
